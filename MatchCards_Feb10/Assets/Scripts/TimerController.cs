@@ -18,6 +18,8 @@ public class TimerController : MonoBehaviour
         }
     }
 
+    public event Action<TimerController> TimeRanOut;
+
     void Start()
     {
         timeLeft = startTime;
@@ -25,8 +27,12 @@ public class TimerController : MonoBehaviour
     
     void Update()
     {
-        timeLeft -= Time.deltaTime;
-        if (timeLeft < 0) timeLeft = 0;
+        if (timeLeft > 0 && (timeLeft -= Time.deltaTime) <= 0)
+        {
+            timeLeft = 0;
+            var handler = TimeRanOut;
+            if (handler != null) handler(this);
+        }
         if (txtTimer != null)
         {
             if (IsOutOfTime) txtTimer.text = "Out of time!";

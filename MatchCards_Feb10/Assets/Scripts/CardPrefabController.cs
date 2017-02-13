@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void CardEventHandler(CardPrefabController c);
+
 public class CardPrefabController : MonoBehaviour
 {
     public SpriteRenderer sprite;
@@ -10,12 +12,11 @@ public class CardPrefabController : MonoBehaviour
     public Sprite backface_sprite;
     public int value;
 
-    private AnimationState animationState;
+    public AnimationState animationState;
     private float animationStateEndTime = 0;
     public const float SHOW_INITIAL_DURATION = 2;
     public const float FLIP_ANIMATION_DURATION = .2f;
-    
-    private Sprite frontface_sprite;
+    public const float SPIN_ANIMATION_DURATION = .4f;
 
     private void Start()
     {
@@ -30,30 +31,29 @@ public class CardPrefabController : MonoBehaviour
         switch (animationState)
         {
         case AnimationState.ShowInitial:
-            if (Time.time >= animationStateEndTime)
-            {
-                animationState = AnimationState.Hiding;
-                animationStateEndTime = Time.time + FLIP_ANIMATION_DURATION;
-                Console.WriteLine("Beginning flip animation");
-            }
+            if (Time.time >= animationStateEndTime) FlipShut();
             break;
+
         case AnimationState.Hiding:
-            if (Time.time >= animationStateEndTime)
-            {
-                animationState = AnimationState.Hidden;
-                Console.WriteLine("Ending flip animation. Card is now hidden");
-            }
+            if (Time.time >= animationStateEndTime) endAnimation(AnimationState.Hidden);
             break;
         case AnimationState.Showing:
-            if (Time.time >= animationStateEndTime)
-            {
-                animationState = AnimationState.Visible;
-                Console.WriteLine("Ending flip animation. Card is now visible");
-            }
+            if (Time.time >= animationStateEndTime) endAnimation(AnimationState.Visible);
             break;
+
         case AnimationState.Hidden:
         case AnimationState.Visible:
             break;
+
+        case AnimationState.Destroying:
+            if (Time.time >= animationStateEndTime)
+            {
+                endAnimation(AnimationState.Destroyed);
+                Destroy(gameObject);
+                return;
+            }
+            break;
+
         default:
             throw new InvalidOperationException();
         }
@@ -83,6 +83,13 @@ public class CardPrefabController : MonoBehaviour
             sprite.transform.localScale = new Vector3((float)Math.Abs(2 * (showAmt - .5)), 1);
             break;
 
+        case AnimationState.Destroying:
+            sprite.sprite = frontface_sprites[value];
+            showAmt = (animationStateEndTime - Time.time) / SPIN_ANIMATION_DURATION;
+            sprite.transform.localScale = new Vector3(1, 1) * showAmt;
+            sprite.transform.localRotation = Quaternion.AngleAxis((1 - showAmt) * 180 * 2, Vector3.forward);
+            break;
+
         default:
             throw new InvalidOperationException();
         }
@@ -90,25 +97,47 @@ public class CardPrefabController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (animationState == AnimationState.Hidden)
-        {
-            animationState = AnimationState.Showing;
-            animationStateEndTime = Time.time + FLIP_ANIMATION_DURATION;
-        }
-        else if (animationState == AnimationState.Visible)
-        {
-            animationState = AnimationState.Hiding;
-            animationStateEndTime = Time.time + FLIP_ANIMATION_DURATION;
-        }
+        var handler = Clicked;
+        if (handler != null) handler.Invoke(this);
+    }
+    private void endAnimation(AnimationState state)
+    {
+        animationState = state;
+        var handler = AnimationCompleted;
+        if (handler != null) handler.Invoke(this);
+    }
+    public void SpinDestroy()
+    {
+        if (animationState != AnimationState.Visible) throw new InvalidOperationException();
+        animationState = AnimationState.Destroying;
+        animationStateEndTime = Time.time + SPIN_ANIMATION_DURATION;
+    }
+    public void FlipOpen()
+    {
+        if (animationState != AnimationState.Hidden) throw new InvalidOperationException();
+        animationState = AnimationState.Showing;
+        animationStateEndTime = Time.time + FLIP_ANIMATION_DURATION;
+    }
+    public void FlipShut()
+    {
+        if (animationState != AnimationState.Visible && animationState != AnimationState.ShowInitial) throw new InvalidOperationException();
+        animationState = AnimationState.Hiding;
+        animationStateEndTime = Time.time + FLIP_ANIMATION_DURATION;
     }
 
-    private enum AnimationState
+    public event CardEventHandler Clicked;
+    public event CardEventHandler AnimationCompleted;
+
+    public enum AnimationState
     {
         ShowInitial,
         Hiding,
         Hidden,
         Showing,
         Visible,
-        Accepting
+        Accepting,
+
+        Destroying,
+        Destroyed
     }
 }
