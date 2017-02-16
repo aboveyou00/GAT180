@@ -24,4 +24,12 @@ public class BridgeController : MonoBehaviour
             segmentControllers[q] = segmentController;
         }
     }
+
+    public BridgeSegmentController this[int idx]
+    {
+        get
+        {
+            return segmentControllers[idx];
+        }
+    }
 }

@@ -13,7 +13,7 @@ public class BulletController : MonoBehaviour
         Vector3 mvel = Camera.main.ScreenToWorldPoint(mpos) - Camera.main.transform.position;
         Debug.DrawRay(Camera.main.transform.position, mvel);
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && bulletPrefab != null)
         {
             var bullet = Instantiate(bulletPrefab);
             bullet.transform.position = Camera.main.transform.position;
