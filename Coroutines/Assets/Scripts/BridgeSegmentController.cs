@@ -16,6 +16,7 @@ public class BridgeSegmentController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Destroy(collision.gameObject);
+        rigidbody.velocity = Vector3.zero;
         StartCoroutine(dropBridge().GetEnumerator());
     }
 
@@ -29,10 +30,10 @@ public class BridgeSegmentController : MonoBehaviour
         int off = 0;
         while (true)
         {
+            yield return new WaitForSeconds(.2f);
             if (segmentIndex - off < 0 && segmentIndex + off >= bridgeController.segmentCount) yield break;
             if (segmentIndex - off >= 0) bridgeController[segmentIndex - off].startFall();
             if (segmentIndex + off < bridgeController.segmentCount && off != 0) bridgeController[segmentIndex + off].startFall();
-            yield return new WaitForSeconds(.2f);
             off++;
         }
     }
