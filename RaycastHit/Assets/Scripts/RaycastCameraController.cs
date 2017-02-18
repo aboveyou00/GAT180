@@ -11,6 +11,10 @@ public class RaycastCameraController : MonoBehaviour
         if (Physics.Raycast(ray, out hitInfo) && Input.GetMouseButtonDown(0))
         {
             GameObject obj = hitInfo.collider.gameObject;
+
+            var material = obj.GetComponent<Renderer>().material;
+            material.color = Color.red;
+
             var rigidbody = obj.GetComponent<Rigidbody>();
             rigidbody.useGravity = true;
             rigidbody.AddForceAtPosition(ray.direction * 50, hitInfo.point, ForceMode.Impulse);
