@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class FollowPath : MonoBehaviour
 {
-    public float speed;
-    public GameController game;
+    public float startDelay, speed;
+    public MapController map;
     public bool restartWhenDone = false;
 
     private int currentIdx = 0;
@@ -23,11 +23,16 @@ public class FollowPath : MonoBehaviour
     }
     void Update()
     {
-        if (game == null || game.map == null) return;
+        if (map == null || map.map == null) return;
 
-        var path = game.map.GetPath();
+        var path = map.GetPath();
         if (!done)
         {
+            if (startDelay > 0)
+            {
+                startDelay -= Time.deltaTime;
+                return;
+            }
             currentProgress += Time.deltaTime * speed;
             while (!done && currentProgress >= 1)
             {
@@ -43,7 +48,7 @@ public class FollowPath : MonoBehaviour
         Vector2 pt;
         if (currentProgress == 0) pt = ptv(path[currentIdx]);
         else pt = mix(path[currentIdx], path[currentIdx + 1], currentProgress);
-        transform.position = new Vector3(game.offset.x + (pt.x * game.tileSize.x), game.offset.y + (pt.y * game.tileSize.y), 0);
+        transform.position = new Vector3(map.offset.x + (pt.x * map.tileSize.x), map.offset.y + (pt.y * map.tileSize.y), 0);
     }
 
     public event EventHandler PathCompleted;
