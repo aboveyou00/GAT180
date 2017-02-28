@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MapController : MonoBehaviour
 {
+    public GameController game;
+
     public Vector2 offset = Vector2.zero;
     public Vector2 tileSize = new Vector2(60, 60);
 

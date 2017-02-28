@@ -11,6 +11,8 @@ public class WaveController : MonoBehaviour
     public bool horizontalWaveTiles = true;
     public float timeBeforeFirstWave = 2;
     public float timeBetweenWaves = 20;
+    public float preloadWaveTileCount = 10;
+    public GameController game;
 
     private int nextWaveIndex;
     private float timeUntilNextWave;
@@ -34,13 +36,34 @@ public class WaveController : MonoBehaviour
         while (timeUntilNextWave < 0)
         {
             timeUntilNextWave += timeBetweenWaves;
+            Destroy(waveTiles[nextWaveIndex]);
             var nextWave = this[nextWaveIndex++];
-            partialWaves.Add(new PartialWave(nextWave));
+            var timeBetweenEnemies = (((nextWaveIndex + 5) / 50.0f) * timeUntilNextWave) / nextWave.count;
+            partialWaves.Add(new PartialWave(nextWave, 0, timeBetweenEnemies));
+        }
+
+        if (!horizontalWaveTiles)
+        {
+            throw new NotImplementedException();
+        }
+        else
+        {
+            while (waveTiles.Count < nextWaveIndex + preloadWaveTileCount)
+            {
+                var waveTile = Instantiate(waveTilePrefab);
+                waveTile.transform.parent = this.transform;
+                waveTile.transform.localPosition = new Vector3(160 * waveTiles.Count, 0, 0);
+                var wtController = waveTile.GetComponent<WaveTileController>();
+                wtController.wave = waves[waveTiles.Count];
+                waveTiles.Add(waveTile);
+            }
+
+            this.transform.localPosition = new Vector3(((-nextWaveIndex + timeUntilNextWave / timeBetweenWaves) * waveTileSize.x), 0, 0);
         }
 
         for (int q = 0; q < partialWaves.Count; q++)
         {
-            partialWaves[q].Update();
+            partialWaves[q].Update(this);
             if (partialWaves[q].IsDone) partialWaves.RemoveAt(q--);
         }
     }

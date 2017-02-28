@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class PartialWave
 {
@@ -19,13 +20,13 @@ public class PartialWave
     public int enemiesLeft;
     public float nextEnemyDelay;
 
-    public void Update()
+    public void Update(WaveController waves)
     {
         if (IsDone) return;
         nextEnemyDelay -= Time.deltaTime;
         while (nextEnemyDelay <= 0)
         {
-            createEnemy();
+            createEnemy(waves);
             if (IsDone) return;
             nextEnemyDelay += enemyDelay;
         }
@@ -38,9 +39,12 @@ public class PartialWave
         }
     }
 
-    private void createEnemy()
+    private void createEnemy(WaveController waves)
     {
         enemiesLeft--;
-
+        var enemy = Object.Instantiate(waves.enemyPrefab);
+        var enemyC = enemy.GetComponent<EnemyController>();
+        enemyC.wave = wave;
+        enemyC.followPath.map = waves.game.map;
     }
 }

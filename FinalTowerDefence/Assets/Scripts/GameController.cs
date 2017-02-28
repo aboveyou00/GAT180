@@ -6,4 +6,10 @@ public class GameController : MonoBehaviour
 {
     public MapController map;
     public WaveController waves;
+
+    private void Start()
+    {
+        map.game = this;
+        waves.game = this;
+    }
 }

@@ -23,6 +23,8 @@ public class WaveGenerator
 
     private Wave makeWave(int idx)
     {
-        return new Wave(idx, (int)Math.Pow(5 + idx, .8), 3 + (idx / 10.0f));
+        var count = (int)Math.Pow(5 * ((idx + 5) / 5.0f), .8);
+        var speed = 3 + (idx / 10.0f);
+        return new Wave(idx, count, speed);
     }
 }
