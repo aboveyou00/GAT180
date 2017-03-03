@@ -8,6 +8,7 @@ public class FollowPath : MonoBehaviour
     public float startDelay, speed;
     public MapController map;
     public bool restartWhenDone = false;
+    public Vector2 offsetPosition;
 
     private int currentIdx = 0;
     private float currentProgress = 0;
@@ -49,6 +50,7 @@ public class FollowPath : MonoBehaviour
         Vector2 pt;
         if (currentProgress == 0) pt = ptv(path[currentIdx]);
         else pt = mix(path[currentIdx], path[currentIdx + 1], currentProgress);
+        pt += new Vector2(offsetPosition.x / 60, offsetPosition.y / 60);
         transform.position = new Vector3(map.offset.x + (pt.x * map.tileSize.x), map.offset.y + (pt.y * map.tileSize.y), 0);
         
         if (!wasDone && done)

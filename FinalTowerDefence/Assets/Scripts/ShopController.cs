@@ -11,9 +11,9 @@ public class ShopController : MonoBehaviour
     public List<TowerController> towers;
 
     public GameObject hoverTile;
-    public GameObject selectionTile;
+    public SelectionController selectionTile;
 
-    private int selectionX, selectionY;
+    private int selectionX = -1, selectionY = -1;
     private TowerController selectedTower;
 
     public int money = 120;
@@ -24,7 +24,7 @@ public class ShopController : MonoBehaviour
     {
         towers = new List<TowerController>();
         hoverTile.SetActive(false);
-        selectionTile.SetActive(false);
+        selectionTile.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -34,10 +34,15 @@ public class ShopController : MonoBehaviour
         var y = (int)Math.Floor(mp[1] / 60);
 
         updateHoverTile(x, y);
+        updateSelection();
     }
     private void updateHoverTile(int x, int y)
     {
-        if (Input.GetMouseButtonDown(0) && (x >= 0 && y >= 0 && x < game.map.map.Width && y < game.map.map.Height)) updateSelection(x, y);
+        if (Input.GetMouseButtonDown(0) && (x >= 0 && y >= 0 && x < game.map.map.Width && y < game.map.map.Height))
+        {
+            selectionX = x;
+            selectionY = y;
+        }
         var tile = game.map.map[x, y];
         if (tile == 0 && (selectionX != x || selectionY != y) && (x >= 0 && y >= 0 && x < game.map.map.Width && y < game.map.map.Height))
         {
@@ -49,21 +54,22 @@ public class ShopController : MonoBehaviour
             hoverTile.SetActive(false);
         }
     }
-    private void updateSelection(int x, int y)
+    private void updateSelection()
     {
-        selectionX = x;
-        selectionY = y;
+        var x = selectionX;
+        var y = selectionY;
         var tile = game.map.map[x, y];
         selectedTower = null;
         if (tile == 0)
         {
             selectionTile.transform.localPosition = new Vector3(x * 60, y * 60, selectionTile.transform.localPosition.z);
-            selectionTile.SetActive(true);
+            selectionTile.gameObject.SetActive(true);
             selectedTower = towers.Find(tc => tc.x == x && tc.y == y);
+            selectionTile.Range = (selectedTower != null ? selectedTower.range : 0);
         }
         else
         {
-            selectionTile.SetActive(false);
+            selectionTile.gameObject.SetActive(false);
         }
     }
 
@@ -78,7 +84,7 @@ public class ShopController : MonoBehaviour
         GUI.Label(new Rect(left + 4, top + 4, right - left - 8, 40), "Money: $" + money);
         top += 44;
 
-        if (!selectionTile.activeSelf) return;
+        if (!selectionTile.gameObject.activeSelf) return;
         if (selectedTower == null)
         {
             GUI.enabled = money >= towerPrice;

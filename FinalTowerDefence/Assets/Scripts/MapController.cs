@@ -16,9 +16,11 @@ public class MapController : MonoBehaviour
     public GameObject castleTile;
     
     public Map map;
+    public List<EnemyController> enemies;
     
     void Start()
     {
+        enemies = new List<EnemyController>();
         map = Map.Generate(17, 11);
         for (int q = 0; q < map.Width; q++)
         {

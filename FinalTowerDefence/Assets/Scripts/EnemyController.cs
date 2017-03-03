@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
 
     public float hp = 10;
     public float banishCost = 2;
+    public float age = 0;
 
     void Start()
     {
@@ -22,9 +23,24 @@ public class EnemyController : MonoBehaviour
 
         followPath.PathCompleted += FollowPath_PathCompleted;
     }
-    
+
+    private void Update()
+    {
+        age += Time.deltaTime;
+    }
+
     private void FollowPath_PathCompleted(object sender, EventArgs e)
     {
         game.shop.banish(this);
+    }
+
+    public void takeDamage(float damage)
+    {
+        hp -= damage;
+        if (hp <= 0)
+        {
+            game.map.enemies.Remove(this);
+            Destroy(gameObject);
+        }
     }
 }

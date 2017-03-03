@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TowerController : MonoBehaviour
@@ -8,8 +9,8 @@ public class TowerController : MonoBehaviour
     
     public float x, y;
     public float shotsPerSecond = 1;
-    public float damage = 1;
-    public float range = 2;
+    public float damage = 30;
+    public float range = 1.6f;
 
     public GameObject shotPrefab;
 
@@ -18,13 +19,49 @@ public class TowerController : MonoBehaviour
     private void Update()
     {
         shotsToFire += shotsPerSecond * Time.deltaTime;
-        while (shotsToFire >= 1)
-            fireShot();
+        while (shotsToFire >= 1 && fireShot())
+            shotsToFire--;
+        if (shotsToFire > 1) shotsToFire = 1;
     }
-    private void fireShot()
+    private bool fireShot()
     {
-        shotsToFire--;
-        //var shot = Instantiate(shotPrefab);
-        
+        var center = new Vector2(transform.localPosition.x + 30, transform.localPosition.y + 30);
+        var range_squared = (range * 60) * (range * 60);
+        var fireAt = game.map.enemies
+            .Where(enemy => point_distance_squared(center, enemy.transform.position) < range_squared)
+            .OrderBy(enemy => enemy.age)
+            .FirstOrDefault();
+        if (fireAt == null) return false;
+
+        var shot = Instantiate(shotPrefab);
+        shot.transform.position = center;
+        var shotC = shot.GetComponent<ShotController>();
+        shotC.target = fireAt;
+        shotC.damage = damage;
+        return true;
+    }
+    private float point_distance(Vector2 one, Vector2 two)
+    {
+        return Mathf.Sqrt(point_distance_squared(one, two));
+    }
+    private float point_distance_squared(Vector2 one, Vector2 two)
+    {
+        var diffx = one.x - two.x;
+        var diffy = one.y - two.y;
+        return diffx * diffx + diffy * diffy;
+    }
+
+    private void OnDrawGizmos()
+    {
+        const int max_segments = 32;
+        var center = new Vector2(transform.localPosition.x + 30, transform.localPosition.y + 30);
+        for (int q = 0; q < max_segments; q++)
+        {
+            var anglefrom = ((Mathf.PI * 2) / max_segments) * q;
+            var angleto = ((Mathf.PI * 2) / max_segments) * (q + 1);
+            Vector3 frompos = new Vector3(center.x + Mathf.Sin(anglefrom) * range * 60, center.y + Mathf.Cos(anglefrom) * range * 60, 10);
+            Vector3 topos = new Vector3(center.x + Mathf.Sin(angleto) * range * 60, center.y + Mathf.Cos(angleto) * range * 60, 10);
+            Gizmos.DrawLine(frompos, topos);
+        }
     }
 }

@@ -46,6 +46,7 @@ public class PartialWave
         enemiesLeft--;
         var enemy = Object.Instantiate(waves.enemyPrefab);
         var enemyC = enemy.GetComponent<EnemyController>();
+        game.map.enemies.Add(enemyC);
         enemyC.game = game;
         enemyC.wave = wave;
         enemyC.followPath.map = waves.game.map;
