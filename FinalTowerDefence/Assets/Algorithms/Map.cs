@@ -92,13 +92,14 @@ public class Map
     {
         Random rnd = new Random();
 
-        Point current;
-        generateEntry(rnd, out current);
+        Point current = generateEntry(rnd);
         depthFirstFill(rnd, current);
         calculateRoute();
+        decorateTerrain(rnd);
     }
-    private void generateEntry(Random rnd, out Point start)
+    private Point generateEntry(Random rnd)
     {
+        Point start;
         bool horiz = rnd.NextDouble() < .5;
         bool last = rnd.NextDouble() < .5;
 
@@ -127,6 +128,7 @@ public class Map
         this[start] = 1;
         start += forward;
         this[start] = 2;
+        return start;
     }
     private void depthFirstFill(Random rnd, Point current)
     {
@@ -165,22 +167,48 @@ public class Map
         var positions = new List<Point>();
         positions.Add(maxPos);
         lookAround(positions, maxPos, max - 1, up);
-
+        path = positions.Reverse<Point>().ToArray();
+    }
+    private void decorateTerrain(Random rnd)
+    {
         for (int q = 0; q < Width; q++)
         {
             for (int w = 0; w < Height; w++)
             {
                 var val = this[q, w];
-                if (val == 0) continue;
-                else this[q, w] = 2;
+                this[q, w] = (rnd.NextDouble() < .3) ? 2 : 0;
             }
         }
 
-        path = positions.Reverse<Point>().ToArray();
-        foreach (var point in path.Skip(1))
+        var swap = new int[Width, Height];
+        for (int q = 0; q < Width; q++)
         {
-            this[point] = 1;
+            for (int w = 0; w < Height; w++)
+            {
+                var forestCount = countAround(q, w, 2);
+                swap[q, w] = (forestCount >= 4) ? 2 :
+                             (forestCount <= 2) ? 0 :
+                                                  this[q, w];
+            }
         }
+        for (int q = 0; q < Width; q++)
+            for (int w = 0; w < Height; w++)
+                this[q, w] = swap[q, w];
+
+        foreach (var point in path.Skip(1))
+            this[point] = 1;
+    }
+    private int countAround(int x, int y, int val)
+    {
+        return (this[x - 1, y - 1] == val ? 1 : 0) +
+               (this[x + 0, y - 1] == val ? 1 : 0) +
+               (this[x + 1, y - 1] == val ? 1 : 0) +
+               (this[x - 1, y + 0] == val ? 1 : 0) +
+               (this[x + 0, y + 0] == val ? 1 : 0) +
+               (this[x + 1, y + 0] == val ? 1 : 0) +
+               (this[x - 1, y + 1] == val ? 1 : 0) +
+               (this[x + 0, y + 1] == val ? 1 : 0) +
+               (this[x + 1, y + 1] == val ? 1 : 0);
     }
     private void lookAround(List<Point> positions, Point currentP, int nextVal, Point forward)
     {
