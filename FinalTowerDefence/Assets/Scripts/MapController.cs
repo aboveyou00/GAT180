@@ -13,6 +13,7 @@ public class MapController : MonoBehaviour
     public GameObject pathTile;
     public GameObject grassTile;
     public GameObject forestTile;
+    public GameObject castleTile;
 
     public GameObject hoverTile;
     public GameObject selectionTile;
@@ -30,6 +31,7 @@ public class MapController : MonoBehaviour
             {
                 var point = map[q, w];
                 GameObject tileType = null;
+                float tileDepth = 0;
                 switch (map[q, w])
                 {
                 case 0:
@@ -44,11 +46,16 @@ public class MapController : MonoBehaviour
                     tileType = forestTile;
                     break;
 
+                case 3:
+                    tileType = castleTile;
+                    tileDepth = -.5f;
+                    break;
+
                 default:
                     throw new NotImplementedException();
                 }
                 var tile = Instantiate(tileType);
-                tile.transform.position = new Vector3(offset.x + (q * tileSize.x), offset.y + (w * tileSize.y), 0);
+                tile.transform.position = new Vector3(offset.x + (q * tileSize.x), offset.y + (w * tileSize.y), tileDepth);
             }
         }
 

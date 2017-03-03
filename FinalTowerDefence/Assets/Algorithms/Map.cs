@@ -197,6 +197,7 @@ public class Map
 
         foreach (var point in path.Skip(1))
             this[point] = 1;
+        this[path.Last()] = 3;
     }
     private int countAround(int x, int y, int val)
     {
