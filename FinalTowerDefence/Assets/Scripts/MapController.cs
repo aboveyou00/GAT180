@@ -14,14 +14,9 @@ public class MapController : MonoBehaviour
     public GameObject grassTile;
     public GameObject forestTile;
     public GameObject castleTile;
-
-    public GameObject hoverTile;
-    public GameObject selectionTile;
-
+    
     public Map map;
-
-    private int selectionX, selectionY;
-
+    
     void Start()
     {
         map = Map.Generate(17, 11);
@@ -57,47 +52,6 @@ public class MapController : MonoBehaviour
                 var tile = Instantiate(tileType);
                 tile.transform.position = new Vector3(offset.x + (q * tileSize.x), offset.y + (w * tileSize.y), tileDepth);
             }
-        }
-
-        hoverTile.SetActive(false);
-        selectionTile.SetActive(false);
-    }
-
-    private void Update()
-    {
-        var mp = Input.mousePosition;
-        var x = (int)Math.Floor(mp[0] / 60);
-        var y = (int)Math.Floor(mp[1] / 60);
-
-        updateHoverTile(x, y);
-    }
-    private void updateHoverTile(int x, int y)
-    {
-        if (Input.GetMouseButtonDown(0)) updateSelection(x, y);
-        var tile = map[x, y];
-        if (tile == 0 && (selectionX != x || selectionY != y))
-        {
-            hoverTile.transform.localPosition = new Vector3(x * 60, y * 60, hoverTile.transform.localPosition.z);
-            hoverTile.SetActive(true);
-        }
-        else
-        {
-            hoverTile.SetActive(false);
-        }
-    }
-    private void updateSelection(int x, int y)
-    {
-        selectionX = x;
-        selectionY = y;
-        var tile = map[x, y];
-        if (tile == 0)
-        {
-            selectionTile.transform.localPosition = new Vector3(x * 60, y * 60, selectionTile.transform.localPosition.z);
-            selectionTile.SetActive(true);
-        }
-        else
-        {
-            selectionTile.SetActive(false);
         }
     }
 
