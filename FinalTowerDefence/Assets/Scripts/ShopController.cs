@@ -16,6 +16,10 @@ public class ShopController : MonoBehaviour
     private int selectionX, selectionY;
     private TowerController selectedTower;
 
+    public int money = 120;
+    public int towerPrice = 40;
+    public float towerPriceIncrease = 1.2f;
+
     private void Start()
     {
         towers = new List<TowerController>();
@@ -71,19 +75,29 @@ public class ShopController : MonoBehaviour
         int right = Screen.width;
         int top = 60;
 
+        GUI.color = new Color(.2f, .2f, 1);
+
+        GUI.Label(new Rect(left + 4, top + 4, right - left - 8, 40), "Money: $" + money);
+        top += 44;
+
         if (selectedTower == null)
         {
-            if (GUI.Button(new Rect(left + 4, top + 4, right - left - 8, 40), "Buy Tower - $40")) buyTower();
+            GUI.enabled = money >= towerPrice;
+            if (GUI.Button(new Rect(left + 4, top + 4, right - left - 8, 40), "Buy Tower - $" + towerPrice)) buyTower();
             top += 44;
         }
         else
         {
-
+            GUI.enabled = true;
+            if (GUI.Button(new Rect(left + 4, top + 4, right - left - 8, 40), "Sell Tower - +$" + getTowerPrice(selectedTower))) sellTower();
+            top += 44;
         }
     }
     private void buyTower()
     {
-        //TODO: check your moneys!
+        if (money < towerPrice) return;
+        money -= towerPrice;
+        towerPrice = (int)(towerPrice * towerPriceIncrease);
 
         var t = Instantiate(towerPrefab);
         t.transform.localPosition = selectionTile.transform.localPosition;
@@ -92,5 +106,16 @@ public class ShopController : MonoBehaviour
         tower.y = selectionY;
         selectedTower = tower;
         towers.Add(tower);
+    }
+    private void sellTower()
+    {
+        money += getTowerPrice(selectedTower);
+        towers.Remove(selectedTower);
+        Destroy(selectedTower.gameObject);
+        selectedTower = null;
+    }
+    private int getTowerPrice(TowerController tower)
+    {
+        return 20;
     }
 }
