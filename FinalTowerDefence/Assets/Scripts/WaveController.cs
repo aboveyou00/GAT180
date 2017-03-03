@@ -39,7 +39,7 @@ public class WaveController : MonoBehaviour
             Destroy(waveTiles[nextWaveIndex]);
             var nextWave = this[nextWaveIndex++];
             var timeBetweenEnemies = (((nextWaveIndex + 5) / 50.0f) * timeUntilNextWave) / nextWave.count;
-            partialWaves.Add(new PartialWave(nextWave, 0, timeBetweenEnemies));
+            partialWaves.Add(new PartialWave(game, nextWave, 0, timeBetweenEnemies));
         }
 
         if (!horizontalWaveTiles)

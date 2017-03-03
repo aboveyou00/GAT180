@@ -69,8 +69,6 @@ public class ShopController : MonoBehaviour
 
     private void OnGUI()
     {
-        if (!selectionTile.activeSelf) return;
-
         int left = Screen.width - 172;
         int right = Screen.width;
         int top = 60;
@@ -80,6 +78,7 @@ public class ShopController : MonoBehaviour
         GUI.Label(new Rect(left + 4, top + 4, right - left - 8, 40), "Money: $" + money);
         top += 44;
 
+        if (!selectionTile.activeSelf) return;
         if (selectedTower == null)
         {
             GUI.enabled = money >= towerPrice;
@@ -102,6 +101,7 @@ public class ShopController : MonoBehaviour
         var t = Instantiate(towerPrefab);
         t.transform.localPosition = selectionTile.transform.localPosition;
         var tower = t.GetComponent<TowerController>();
+        tower.game = game;
         tower.x = selectionX;
         tower.y = selectionY;
         selectedTower = tower;
@@ -117,5 +117,11 @@ public class ShopController : MonoBehaviour
     private int getTowerPrice(TowerController tower)
     {
         return 20;
+    }
+
+    public void banish(EnemyController enemy)
+    {
+        money -= (int)enemy.banishCost;
+        enemy.banishCost *= 2;
     }
 }

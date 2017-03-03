@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\MapController.cs" />
     <Compile Include="Assets\Scripts\ShopController.cs" />
+    <Compile Include="Assets\Scripts\ShotController.cs" />
     <Compile Include="Assets\Scripts\TowerController.cs" />
     <Compile Include="Assets\Scripts\WaveController.cs" />
     <Compile Include="Assets\Scripts\WaveTileController.cs" />

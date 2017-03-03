@@ -25,6 +25,7 @@ public class FollowPath : MonoBehaviour
     {
         if (map == null || map.map == null) return;
 
+        var wasDone = done;
         var path = map.GetPath();
         if (!done)
         {
@@ -49,6 +50,18 @@ public class FollowPath : MonoBehaviour
         if (currentProgress == 0) pt = ptv(path[currentIdx]);
         else pt = mix(path[currentIdx], path[currentIdx + 1], currentProgress);
         transform.position = new Vector3(map.offset.x + (pt.x * map.tileSize.x), map.offset.y + (pt.y * map.tileSize.y), 0);
+        
+        if (!wasDone && done)
+        {
+            var handler = PathCompleted;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+        if (done && restartWhenDone)
+        {
+            currentProgress = 0;
+            currentIdx = 0;
+            done = false;
+        }
     }
 
     public event EventHandler PathCompleted;

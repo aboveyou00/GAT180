@@ -7,14 +7,16 @@ using Object = UnityEngine.Object;
 
 public class PartialWave
 {
-    public PartialWave(Wave wave, float startDelay = 0, float enemyDelay = 2)
+    public PartialWave(GameController game, Wave wave, float startDelay = 0, float enemyDelay = 2)
     {
+        this.game = game;
         this.wave = wave;
         this.nextEnemyDelay = startDelay;
         this.enemyDelay = enemyDelay;
         this.enemiesLeft = wave.count;
     }
 
+    public GameController game;
     public Wave wave;
     public float enemyDelay;
     public int enemiesLeft;
@@ -44,6 +46,7 @@ public class PartialWave
         enemiesLeft--;
         var enemy = Object.Instantiate(waves.enemyPrefab);
         var enemyC = enemy.GetComponent<EnemyController>();
+        enemyC.game = game;
         enemyC.wave = wave;
         enemyC.followPath.map = waves.game.map;
     }
