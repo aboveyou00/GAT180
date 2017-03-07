@@ -20,6 +20,15 @@ public class ShopController : MonoBehaviour
     public int towerPrice = 40;
     public float towerPriceIncrease = 1.2f;
 
+    public float initialUpgradePrice = 20;
+    public float upgradePriceIncrease = 1.5f;
+    public float rangePriceWeight = 1.5f, damagePriceWeight = 1, speedPriceWeight = 1, chainHitPriceWeight = 1, criticalHitPriceWeight = 1, poisonPriceWeight = 1;
+
+    private float nextUpgradePrice()
+    {
+        return initialUpgradePrice * Mathf.Pow(upgradePriceIncrease, selectedTower.UpgradesPurchased);
+    }
+
     private void Start()
     {
         towers = new List<TowerController>();
@@ -65,7 +74,7 @@ public class ShopController : MonoBehaviour
             selectionTile.transform.localPosition = new Vector3(x * 60, y * 60, selectionTile.transform.localPosition.z);
             selectionTile.gameObject.SetActive(true);
             selectedTower = towers.Find(tc => tc.x == x && tc.y == y);
-            selectionTile.Range = (selectedTower != null ? selectedTower.range : 0);
+            selectionTile.Range = (selectedTower != null ? selectedTower.Range : 0);
         }
         else
         {
@@ -73,6 +82,7 @@ public class ShopController : MonoBehaviour
         }
     }
 
+    //public float rangePriceWeight = 1.5f, damagePriceWeight = 1, speedPriceWeight = 1, chainHitPriceWeight = 1, criticalHitPriceWeight = 1, poisonPriceWeight = 1;
     private void OnGUI()
     {
         int left = Screen.width - 172;
@@ -89,10 +99,49 @@ public class ShopController : MonoBehaviour
         {
             GUI.enabled = money >= towerPrice;
             if (GUI.Button(new Rect(left + 4, top + 4, right - left - 8, 40), "Buy Tower - $" + towerPrice)) buyTower();
+            GUI.enabled = true;
             top += 44;
         }
         else
         {
+            float upgPrice = nextUpgradePrice();
+
+            var rangedPrice = (int)(upgPrice * rangePriceWeight);
+            GUI.enabled = money >= rangedPrice;
+            GUI.Label(new Rect(left + 4, top + 4, (right - left - 8) / 2, 40), "Range: " + (selectedTower.rangeUpgrades + 1));
+            if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top + 4, (right - left - 8) / 2, 40), "+ ($" + rangedPrice + ")")) buyUpgrade(ref selectedTower.rangeUpgrades, rangedPrice);
+            top += 44;
+
+            var damagePrice = (int)(upgPrice * damagePriceWeight);
+            GUI.enabled = money >= damagePrice;
+            GUI.Label(new Rect(left + 4, top + 4, (right - left - 8) / 2, 40), "Damage: " + (selectedTower.damageUpgrades + 1));
+            if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top + 4, (right - left - 8) / 2, 40), "+ ($" + rangedPrice + ")")) buyUpgrade(ref selectedTower.damageUpgrades, damagePrice);
+            top += 44;
+
+            var speedPrice = (int)(upgPrice * speedPriceWeight);
+            GUI.enabled = money >= speedPrice;
+            GUI.Label(new Rect(left + 4, top + 4, (right - left - 8) / 2, 40), "Speed: " + (selectedTower.speedUpgrades + 1));
+            if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top + 4, (right - left - 8) / 2, 40), "+ ($" + rangedPrice + ")")) buyUpgrade(ref selectedTower.speedUpgrades, speedPrice);
+            top += 44;
+
+            var chainHitPrice = (int)(upgPrice * chainHitPriceWeight);
+            GUI.enabled = money >= chainHitPrice;
+            GUI.Label(new Rect(left + 4, top + 4, (right - left - 8) / 2, 40), "Chain Hit: " + (selectedTower.chainHitUpgrades + 1));
+            if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top + 4, (right - left - 8) / 2, 40), "+ ($" + rangedPrice + ")")) buyUpgrade(ref selectedTower.chainHitUpgrades, chainHitPrice);
+            top += 44;
+
+            var criticalHitPrice = (int)(upgPrice * criticalHitPriceWeight);
+            GUI.enabled = money >= criticalHitPrice;
+            GUI.Label(new Rect(left + 4, top + 4, (right - left - 8) / 2, 40), "Critical Hit: " + (selectedTower.criticalHitUpgrades + 1));
+            if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top + 4, (right - left - 8) / 2, 40), "+ ($" + rangedPrice + ")")) buyUpgrade(ref selectedTower.criticalHitUpgrades, criticalHitPrice);
+            top += 44;
+
+            var poisonPrice = (int)(upgPrice * poisonPriceWeight);
+            GUI.enabled = money >= poisonPrice;
+            GUI.Label(new Rect(left + 4, top + 4, (right - left - 8) / 2, 40), "Poison: " + (selectedTower.poisonUpgrades + 1));
+            if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top + 4, (right - left - 8) / 2, 40), "+ ($" + rangedPrice + ")")) buyUpgrade(ref selectedTower.poisonUpgrades, poisonPrice);
+            top += 44;
+
             GUI.enabled = true;
             if (GUI.Button(new Rect(left + 4, top + 4, right - left - 8, 40), "Sell Tower - +$" + getTowerPrice(selectedTower))) sellTower();
             top += 44;
@@ -112,6 +161,12 @@ public class ShopController : MonoBehaviour
         tower.y = selectionY;
         selectedTower = tower;
         towers.Add(tower);
+    }
+    private void buyUpgrade(ref int upgradeVar, int price)
+    {
+        if (money < price) return;
+        upgradeVar++;
+        money -= price;
     }
     private void sellTower()
     {
