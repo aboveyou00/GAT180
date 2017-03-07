@@ -83,7 +83,7 @@ public class TowerController : MonoBehaviour
         var range_squared = Mathf.Pow(Range * 60, 2);
         var fireAt = game.map.enemies
             .Where(enemy => point_distance_squared(center, enemy.transform.position) < range_squared)
-            .OrderBy(enemy => enemy.age)
+            .OrderByDescending(enemy => enemy.age)
             .FirstOrDefault();
         if (fireAt == null) return false;
 

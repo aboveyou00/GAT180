@@ -82,7 +82,6 @@ public class ShopController : MonoBehaviour
         }
     }
 
-    //public float rangePriceWeight = 1.5f, damagePriceWeight = 1, speedPriceWeight = 1, chainHitPriceWeight = 1, criticalHitPriceWeight = 1, poisonPriceWeight = 1;
     private void OnGUI()
     {
         int left = Screen.width - 172;
