@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     public FollowPath followPath;
     public Wave wave;
 
-    public float hp = 10;
+    public float totalHp = 10, hp = 10;
     public float banishCost = 2;
     public float age = 0;
 
@@ -20,6 +20,8 @@ public class EnemyController : MonoBehaviour
         if (followPath == null) followPath = GetComponent<FollowPath>();
         followPath.speed = wave.speed;
         followPath.restartWhenDone = true;
+        totalHp = wave.hp;
+        hp = wave.hp;
 
         followPath.PathCompleted += FollowPath_PathCompleted;
     }
@@ -39,6 +41,7 @@ public class EnemyController : MonoBehaviour
         hp -= damage;
         if (hp <= 0)
         {
+            game.shop.money += (int)(banishCost * 2);
             game.map.enemies.Remove(this);
             Destroy(gameObject);
         }

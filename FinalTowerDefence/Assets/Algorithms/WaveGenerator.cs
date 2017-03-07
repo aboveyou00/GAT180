@@ -25,6 +25,7 @@ public class WaveGenerator
     {
         var count = (int)Math.Pow(5 * ((idx + 5) / 5.0f), .8);
         var speed = 3 + (idx / 10.0f);
-        return new Wave(idx, count, speed);
+        var hp = (int)(10 * Math.Pow(idx, 1.4));
+        return new Wave(idx, count, speed, hp);
     }
 }
