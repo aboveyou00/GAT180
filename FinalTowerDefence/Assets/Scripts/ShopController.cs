@@ -71,17 +71,11 @@ public class ShopController : MonoBehaviour
         var y = selectionY;
         var tile = game.map.map[x, y];
         selectedTower = null;
-        if (tile == 0)
-        {
-            selectionTile.transform.localPosition = new Vector3(x * 60, y * 60, selectionTile.transform.localPosition.z);
-            selectionTile.gameObject.SetActive(true);
-            selectedTower = towers.Find(tc => tc.x == x && tc.y == y);
-            selectionTile.Range = (selectedTower != null ? selectedTower.Range : 0);
-        }
-        else
-        {
-            selectionTile.gameObject.SetActive(false);
-        }
+
+        selectionTile.transform.localPosition = new Vector3(x * 60, y * 60, selectionTile.transform.localPosition.z);
+        selectedTower = towers.Find(tc => tc.x == x && tc.y == y);
+        selectionTile.Range = (selectedTower != null ? selectedTower.Range : 0);
+        selectionTile.gameObject.SetActive(tile == 0);
     }
 
     private void OnGUI()

@@ -38,7 +38,8 @@ public class SelectionController : MonoBehaviour
     {
         List<Vector3> positions = new List<Vector3>();
         const int max_segments = 32;
-        var center = new Vector2(transform.localPosition.x + 30, transform.localPosition.y + 30);
+        //var center = new Vector2(transform.localPosition.x + 30, transform.localPosition.y + 30);
+        var center = new Vector2(30, 30);
         for (int q = 0; q < max_segments; q++)
         {
             var anglefrom = ((Mathf.PI * 2) / max_segments) * q;
