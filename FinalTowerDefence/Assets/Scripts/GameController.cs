@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
     public WaveController waves;
     public ShopController shop;
 
+    public float playSpeed = 1;
+
     private void Start()
     {
         map.game = this;

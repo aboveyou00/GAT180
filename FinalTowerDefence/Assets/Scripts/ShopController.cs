@@ -44,6 +44,8 @@ public class ShopController : MonoBehaviour
 
         updateHoverTile(x, y);
         updateSelection();
+
+        if (Input.GetKeyDown("space")) Time.timeScale = (Time.timeScale == 0 ? game.playSpeed : 0);
     }
     private void updateHoverTile(int x, int y)
     {
@@ -86,10 +88,30 @@ public class ShopController : MonoBehaviour
     {
         int left = Screen.width - 172;
         int right = Screen.width;
-        int top = 60;
+        int top = Screen.height - 4;
 
         GUI.color = new Color(.2f, .2f, 1);
 
+        if (GUI.Button(new Rect(left + 4, top - 40, right - left - 8, 40), Time.timeScale == 0 ? "Play" : "Pause"))
+        {
+            //'\u23f8'.ToString() //Pause
+            Time.timeScale = (Time.timeScale == 0 ? game.playSpeed : 0);
+        }
+        top -= 44;
+
+        if (GUI.Button(new Rect(left + 4, top - 40, (right - left - 8) / 2, 40), "Normal")) //'\u25b6'.ToString()
+        {
+            game.playSpeed = 1;
+            Time.timeScale = game.playSpeed;
+        }
+        if (GUI.Button(new Rect(left + ((right - left) / 2) + 4, top - 40, (right - left - 8) / 2, 40), "Fast")) //'\u23e9'.ToString()
+        {
+            game.playSpeed = 3;
+            Time.timeScale = game.playSpeed;
+        }
+        top -= 44;
+
+        top = 60;
         GUI.Label(new Rect(left + 4, top + 4, right - left - 8, 40), "Money: $" + money);
         top += 44;
 
