@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ShotController : MonoBehaviour
@@ -25,15 +26,21 @@ public class ShotController : MonoBehaviour
     {
         if (target == null || target.gameObject == null)
         {
-            //TODO: target next in line
-            Destroy(gameObject);
-            return;
+            var newTarget = game.map.enemies
+                .OrderBy(enemy => point_distance_squared(transform.position, enemy.transform.position))
+                .FirstOrDefault();
+            if (newTarget == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            target = newTarget;
         }
 
         age += Time.deltaTime;
 
         Vector2 pos = transform.position;
-        pos += velocity;
+        pos += velocity * Time.deltaTime * 60;
         var newvel = (Vector2)target.transform.position - pos;
         var lerpAmt = Time.deltaTime + (age / 3);
         velocity = (1 - lerpAmt) * velocity + lerpAmt * newvel;
@@ -42,7 +49,7 @@ public class ShotController : MonoBehaviour
         if (point_distance_squared(target.transform.position, pos) < 6*6)
         {
             target.takeDamage(damage);
-            if (poison.damage > 0) target.takePoison(poison.Restart());
+            if (poison != null && poison.damage > 0) target.takePoison(poison);
             //TODO: chain hit
             Destroy(gameObject);
         }

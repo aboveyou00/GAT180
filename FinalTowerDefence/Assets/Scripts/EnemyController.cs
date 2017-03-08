@@ -38,9 +38,9 @@ public class EnemyController : MonoBehaviour
         for (int q = 0; q < poisons.Count; q++)
         {
             PoisonEffect p = poisons[q];
-            var deltaTime = Time.deltaTime; //TODO: don't deal more damage after the poison effect ends
+            var deltaTime = Math.Min(Time.deltaTime, p.time);
             poisonDamage += (p.damage / p.time) * deltaTime;
-            if (p.startTime + p.time <= Time.time) poisons.RemoveAt(q--);
+            if (p.time <= 0) poisons.RemoveAt(q--);
         }
         takeDamage(poisonDamage);
     }
