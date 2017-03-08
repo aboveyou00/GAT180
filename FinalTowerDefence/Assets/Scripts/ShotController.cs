@@ -27,7 +27,10 @@ public class ShotController : MonoBehaviour
         if (target == null || target.gameObject == null)
         {
             var newTarget = game.map.enemies
-                .OrderBy(enemy => point_distance_squared(transform.position, enemy.transform.position))
+                .Select(en => new { enemy = en, distance_squared = point_distance_squared(transform.position, en.transform.position) })
+                .Where(pair => pair.distance_squared < 80*80)
+                .OrderBy(pair => pair.distance_squared)
+                .Select(pair => pair.enemy)
                 .FirstOrDefault();
             if (newTarget == null)
             {
