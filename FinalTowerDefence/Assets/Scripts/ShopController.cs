@@ -192,7 +192,7 @@ public class ShopController : MonoBehaviour
     }
     private int getTowerPrice(TowerController tower)
     {
-        return 20;
+        return 20 + (int)nextUpgradePrice();
     }
 
     public void banish(EnemyController enemy)
