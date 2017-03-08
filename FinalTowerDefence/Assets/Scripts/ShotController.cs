@@ -7,6 +7,8 @@ public class ShotController : MonoBehaviour
 {
     public GameController game;
 
+    public GameObject chainHitPrefab;
+
     public EnemyController target;
     public float damage;
     public PoisonEffect poison;
@@ -53,7 +55,31 @@ public class ShotController : MonoBehaviour
         {
             target.takeDamage(damage);
             if (poison != null && poison.damage > 0) target.takePoison(poison);
-            //TODO: chain hit
+
+            if (chainHit != 0)
+            {
+                var targets = new List<EnemyController>();
+                targets.Add(target);
+                while (chainHit-- > 0)
+                {
+                    target = game.map.enemies
+                        .Where(enemy => !targets.Contains(enemy))
+                        .Select(en => new { enemy = en, distance_squared = point_distance_squared(target.transform.position, en.transform.position) })
+                        .Where(pair => pair.distance_squared < 120*120)
+                        .OrderBy(pair => pair.distance_squared)
+                        .Select(pair => pair.enemy)
+                        .FirstOrDefault();
+                    if (target == null) break;
+                    target.takeDamage(damage);
+                    if (poison != null && poison.damage > 0) target.takePoison(poison.Clone());
+                    targets.Add(target);
+                }
+
+                var chgobj = Instantiate(chainHitPrefab);
+                var chcontroller = chgobj.GetComponent<ChainHitController>();
+                chcontroller.CreateChainHit(targets);
+            }
+            
             Destroy(gameObject);
         }
     }

@@ -14,4 +14,9 @@ public class PoisonEffect
 
     public readonly float damage;
     public readonly float time;
+
+    public PoisonEffect Clone()
+    {
+        return new PoisonEffect(damage, time);
+    }
 }

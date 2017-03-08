@@ -40,7 +40,7 @@ public class TowerController : MonoBehaviour
         get
         {
             int ch = 0;
-            for (int q = chainHitUpgrades; q > 0; q++)
+            for (int q = chainHitUpgrades; q > 0; q--)
             {
                 if (Random.value * q > .5) ch++;
                 else break;
