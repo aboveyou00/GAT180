@@ -13,7 +13,7 @@ public class TowerController : MonoBehaviour
     {
         get
         {
-            return baseShotsPerSecond * (1 + Mathf.Pow(speedUpgrades, 1.6f));
+            return baseShotsPerSecond * Mathf.Pow(speedUpgrades + 1, 1.4f);
         }
     }
     public float baseDamage = 30;
@@ -53,7 +53,7 @@ public class TowerController : MonoBehaviour
         get
         {
             var dmg = Damage;
-            return new PoisonEffect(Mathf.Pow(2, poisonUpgrades) * dmg, Mathf.Sqrt(poisonUpgrades));
+            return new PoisonEffect(.3f * Mathf.Pow(1.3f, poisonUpgrades) * dmg, Mathf.Sqrt(poisonUpgrades) * 3);
         }
     }
     
