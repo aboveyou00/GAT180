@@ -16,4 +16,9 @@ public struct PoisonEffect
     public readonly float damage;
     public readonly float time;
     public readonly float startTime;
+
+    public PoisonEffect Restart()
+    {
+        return new PoisonEffect(damage, time);
+    }
 }

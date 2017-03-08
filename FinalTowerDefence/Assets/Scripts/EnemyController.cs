@@ -15,6 +15,8 @@ public class EnemyController : MonoBehaviour
     public float banishCost = 2;
     public float age = 0;
 
+    private List<PoisonEffect> poisons;
+
     void Start()
     {
         if (followPath == null) followPath = GetComponent<FollowPath>();
@@ -24,11 +26,23 @@ public class EnemyController : MonoBehaviour
         hp = wave.hp;
 
         followPath.PathCompleted += FollowPath_PathCompleted;
+
+        poisons = new List<PoisonEffect>();
     }
 
     private void Update()
     {
         age += Time.deltaTime;
+
+        var poisonDamage = 0.0f;
+        for (int q = 0; q < poisons.Count; q++)
+        {
+            PoisonEffect p = poisons[q];
+            var deltaTime = Time.deltaTime; //TODO: don't deal more damage after the poison effect ends
+            poisonDamage += (p.damage / p.time) * deltaTime;
+            if (p.startTime + p.time <= Time.time) poisons.RemoveAt(q--);
+        }
+        takeDamage(poisonDamage);
     }
 
     private void FollowPath_PathCompleted(object sender, EventArgs e)
@@ -44,6 +58,18 @@ public class EnemyController : MonoBehaviour
             game.shop.money += (int)(banishCost * 2);
             game.map.enemies.Remove(this);
             Destroy(gameObject);
+        }
+    }
+    public void takePoison(PoisonEffect p)
+    {
+        poisons.Add(p);
+    }
+
+    public bool IsPoisoned
+    {
+        get
+        {
+            return poisons.Count != 0;
         }
     }
 }

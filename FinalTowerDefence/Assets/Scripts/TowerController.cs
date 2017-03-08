@@ -31,7 +31,7 @@ public class TowerController : MonoBehaviour
     {
         get
         {
-            return baseRange * (1 + Mathf.Pow(rangeUpgrades, 1.6f));
+            return baseRange * Mathf.Pow(1.2f, rangeUpgrades);
         }
     }
 
@@ -92,6 +92,8 @@ public class TowerController : MonoBehaviour
         var shotC = shot.GetComponent<ShotController>();
         shotC.target = fireAt;
         shotC.damage = Damage;
+        shotC.poison = Poison;
+        shotC.chainHit = ChainHit;
         return true;
     }
     private float point_distance(Vector2 one, Vector2 two)

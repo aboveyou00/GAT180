@@ -8,6 +8,8 @@ public class ShotController : MonoBehaviour
 
     public EnemyController target;
     public float damage;
+    public PoisonEffect poison;
+    public int chainHit;
 
     public float initialSpeed = 4;
     private Vector2 velocity;
@@ -23,6 +25,7 @@ public class ShotController : MonoBehaviour
     {
         if (target == null || target.gameObject == null)
         {
+            //TODO: target next in line
             Destroy(gameObject);
             return;
         }
@@ -39,6 +42,8 @@ public class ShotController : MonoBehaviour
         if (point_distance_squared(target.transform.position, pos) < 6*6)
         {
             target.takeDamage(damage);
+            if (poison.damage > 0) target.takePoison(poison.Restart());
+            //TODO: chain hit
             Destroy(gameObject);
         }
     }
