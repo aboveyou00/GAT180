@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\TowerController.cs" />
     <Compile Include="Assets\Scripts\WaveController.cs" />
     <Compile Include="Assets\Scripts\WaveTileController.cs" />
+    <Compile Include="Assets\Serialization\Scene.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
