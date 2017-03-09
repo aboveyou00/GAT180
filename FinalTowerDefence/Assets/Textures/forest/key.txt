@@ -1,0 +1,107 @@
+0
+_______________
+N/F |  F  | N/F
+ F  | REF |  F 
+N/F |  F  | N/F
+
+
+1
+_______________
+N/F |  N  | N/F
+ F  | REF |  F
+N/F |  F  | N/F
+
+2
+_______________
+N/F |  F  | N/F
+ F  | REF |  N 
+N/F |  F  | N/F
+
+
+3
+_______________
+N/F |  F  | N/F
+ F  | REF |  F 
+N/F |  N  | N/F
+
+
+4
+_______________
+N/F |  F  | N/F
+ N  | REF |  F
+N/F |  F  | N/F
+
+
+5
+_______________
+N/F |  N  | N/F
+ F  | REF |  N
+N/F |  F  | N/F
+
+
+6
+_______________
+N/F |  N  | N/F
+ F  | REF |  F
+N/F |  N  | N/F
+
+7
+_______________
+N/F |  N  | N/F
+ N  | REF |  F 
+N/F |  F  | N/F
+
+
+8
+_______________
+N/F |  F  | N/F
+ F  | REF |  N 
+N/F |  N  | N/F
+
+
+9
+_______________
+N/F |  F  | N/F
+ N  | REF |  N
+N/F |  F  | N/F
+
+
+a
+_______________
+N/F |  F  | N/F
+ N  | REF |  F
+N/F |  N  | N/F
+
+b
+_______________
+N/F |  F  | N/F
+ N  | REF |  N 
+N/F |  N  | N/F
+
+
+c
+_______________
+N/F |  N  | N/F
+ N  | REF |  F
+N/F |  N  | N/F
+
+
+d
+_______________
+N/F |  N  | N/F
+ N  | REF |  N
+N/F |  F  | N/F
+
+
+e
+_______________
+N/F |  N  | N/F
+ F  | REF |  N 
+N/F |  N  | N/F
+
+
+f
+_______________
+N/F |  N  | N/F
+ N  | REF |  N 
+N/F |  N  | N/F
