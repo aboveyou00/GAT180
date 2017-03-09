@@ -105,6 +105,15 @@ public class ShopController : MonoBehaviour
         }
         top -= 44;
 
+        GUI.Label(new Rect(left + 4, top - 20, right - left - 8, 40), "Time survived: " + (int)Mathf.Floor(game.timeSurvived) + "s");
+        top -= 24;
+        GUI.Label(new Rect(left + 4, top - 20, right - left - 8, 40), "Enemies Banished: " + game.enemiesBanished);
+        top -= 24;
+        GUI.Label(new Rect(left + 4, top - 20, right - left - 8, 40), "Enemies Killed: " + game.enemiesKilled);
+        top -= 24;
+        GUI.Label(new Rect(left + 4, top - 20, right - left - 8, 40), "Money Spent: $" + game.moneysSpent);
+        top -= 24;
+
         top = 60;
         GUI.Label(new Rect(left + 4, top + 4, right - left - 8, 40), "Money: $" + money);
         top += 44;
@@ -166,6 +175,7 @@ public class ShopController : MonoBehaviour
     {
         if (money < towerPrice) return;
         money -= towerPrice;
+        game.moneysSpent += towerPrice;
         towerPrice = (int)(towerPrice * towerPriceIncrease);
 
         var t = Instantiate(towerPrefab);
@@ -182,6 +192,7 @@ public class ShopController : MonoBehaviour
         if (money < price) return;
         upgradeVar++;
         money -= price;
+        game.moneysSpent += price;
     }
     private void sellTower()
     {
@@ -199,5 +210,6 @@ public class ShopController : MonoBehaviour
     {
         money -= (int)enemy.banishCost;
         enemy.banishCost *= 2;
+        game.enemiesBanished++;
     }
 }

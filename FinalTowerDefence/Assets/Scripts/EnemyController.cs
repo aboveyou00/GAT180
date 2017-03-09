@@ -56,6 +56,7 @@ public class EnemyController : MonoBehaviour
         if (hp <= 0)
         {
             game.shop.money += (int)(banishCost * 2);
+            game.enemiesKilled++;
             game.map.enemies.Remove(this);
             Destroy(gameObject);
         }
