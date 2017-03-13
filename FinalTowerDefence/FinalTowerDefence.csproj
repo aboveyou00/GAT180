@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\ChainHitController.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
     <Compile Include="Assets\Scripts\FollowPath.cs" />
+    <Compile Include="Assets\Scripts\ForestTileController.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\HealthBarController.cs" />
     <Compile Include="Assets\Scripts\MapController.cs" />

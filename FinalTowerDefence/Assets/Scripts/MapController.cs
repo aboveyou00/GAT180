@@ -12,9 +12,9 @@ public class MapController : MonoBehaviour
 
     public GameObject pathTile;
     public GameObject grassTile;
-    public GameObject forestTile;
     public GameObject castleTile;
-    
+    public GameObject forestTile;
+
     public Map map;
     public List<EnemyController> enemies;
     
@@ -52,6 +52,7 @@ public class MapController : MonoBehaviour
                     throw new NotImplementedException();
                 }
                 var tile = Instantiate(tileType);
+                tile.SendMessage("InitTile", new object[] { this, q, w }, SendMessageOptions.DontRequireReceiver);
                 tile.transform.position = new Vector3(offset.x + (q * tileSize.x), offset.y + (w * tileSize.y), tileDepth);
             }
         }
